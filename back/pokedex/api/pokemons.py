@@ -1,8 +1,8 @@
 from flask import request
 from flask_restful import Resource
 
-from pokedex.managers.pokemons import search_pokemons, get_pokemon_by_name, create_pokemon, delete_pokemon
-
+from pokedex.managers.pokemons import search_pokemons, get_pokemon_by_name, create_pokemon, delete_pokemon, edit_pokemon_stats ,get_types
+from pokedex.models.pokemon import Type
 
 class Pokemons(Resource):
     def get(self):
@@ -13,7 +13,7 @@ class Pokemons(Resource):
 
     def post(self):
         data = request.json
-        pokemon = create_pokemon(data['name'], data['hp'], 10, 0, 0, 0, 0)
+        pokemon = create_pokemon(data['name'], data['speed'], data['special-defense'], data['special-attack'], data['defense'], data['attack'], data['hp'])
         return pokemon.get_small_data()
 
 
@@ -28,3 +28,20 @@ class Pokemon(Resource):
     def delete(self, pokemon_name):
         result = delete_pokemon(pokemon_name)
         return result
+
+    def patch(self, pokemon_name):
+        data = request.json
+        print(data)
+        pokemon = get_pokemon_by_name(pokemon_name)
+        edit_pokemon_stats(pokemon_name, data['stats'])
+        return pokemon.get_small_data()
+
+
+class Types(Resource):
+
+    def get(self):
+        types = []
+        for type in Type.select():
+            types.append(type.name)
+
+        return types

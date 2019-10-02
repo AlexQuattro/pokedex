@@ -53,7 +53,6 @@ def load_pokemon_from_api(name):
         pokemon.update(**stats).execute()
     return pokemon
 
-
 def load_pokemon_types_from_api(name):
     request = requests.get(f'https://pokeapi.co/api/v2/pokemon/{name}')
     pokemon_data = request.json()
@@ -144,7 +143,7 @@ def search_pokemons(query, type):
     return pokemons
 
 
-def edit_pokemon_stats(name, stat, new_value):
+def edit_pokemon_stat(name, stat, new_value):
     """
     Edit stats of a pokemon
     
@@ -168,8 +167,27 @@ def edit_pokemon_hp(name, new_hp):
 
     return pokemon
 
+def edit_pokemon_stats(name,new_stats):
+    pokemon = get_pokemon_by_name(name)
+    pokemon.hp = new_stats['hp']
+    pokemon.attack = new_stats['attack']
+    pokemon.special_attack = new_stats['special_attack']
+    pokemon.defense = new_stats['defense']
+    pokemon.special_defense = new_stats['special_defense']
+    pokemon.save()
+
+    return pokemon
+
 
 def delete_pokemon(name):
     pokemon = get_pokemon_by_name(name)
     pokemon.delete_instance(recursive=True)
+    return True
+
+def get_types(name,types):
+    pokemon = get_pokemon_by_name(name)
+    PokemonTypes.delete().where(pokemon.name == name).execute()
+    for i,type in enumerate(types):
+        query = Type.get_or_none(name=type)
+        PokemonTypes.create(pokemon=pokemon,type = query,slot = i)
     return True
