@@ -3,7 +3,8 @@ from flask_restful import Api
 
 from pokedex.models.database import db
 
-from .pokemons import Pokemon, Pokemons, Types
+from .pokemons import Pokemon, Pokemons
+from .types import Types
 
 api_bp = Blueprint('api', __name__)
 api = Api(api_bp)

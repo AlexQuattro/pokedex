@@ -25,6 +25,9 @@ class Pokemon(Resource):
 
         return pokemon.get_small_data()
 
+    def patch(self, pokemon_name):
+        return 'panic', 500
+
     def delete(self, pokemon_name):
         result = delete_pokemon(pokemon_name)
         return result
