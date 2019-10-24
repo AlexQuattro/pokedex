@@ -167,6 +167,7 @@ def edit_pokemon_hp(name, new_hp):
 
     return pokemon
 
+
 def edit_pokemon_stats(name,new_stats):
     pokemon = get_pokemon_by_name(name)
     pokemon.hp = new_stats['hp']
@@ -184,9 +185,11 @@ def delete_pokemon(name):
     pokemon.delete_instance(recursive=True)
     return True
 
+
 def get_types(name,types):
     pokemon = get_pokemon_by_name(name)
     PokemonTypes.delete().where(pokemon.name == name).execute()
+
     for i,type in enumerate(types):
         query = Type.get_or_none(name=type)
         PokemonTypes.create(pokemon=pokemon,type = query,slot = i)
