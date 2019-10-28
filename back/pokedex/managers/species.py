@@ -47,3 +47,28 @@ def load_pokemons_species_from_api():
         print(f'{i} species loaded.')
 
     return i
+
+def get_species():
+    species = []
+    for specie in PokemonSpecies.select():
+            species.append(specie)
+
+    return species
+
+
+def get_specie(name):
+    specie = PokemonSpecies.get_or_none(name=name)
+
+    return specie
+
+
+def new_specie(name):
+    new_poke = Pokemon.get_or_none(Pokemon.name == name)
+
+    if new_poke is None:
+        Pokemon.create(name=name)
+
+    new_sp = PokemonSpecies.create(name=name)
+
+    return new_sp
+

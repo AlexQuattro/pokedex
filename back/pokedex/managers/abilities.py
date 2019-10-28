@@ -46,3 +46,17 @@ def load_abilities_from_api():
         print(f'{i} abilities loaded.')
 
     return i
+
+def get_ability():
+    abilities = []
+    for ability in Ability.select():
+            abilities.append(ability)
+
+    return abilities
+
+def get_verbose(effect_id):
+    verboses = []
+    for verbose in VerboseEffect.select(VerboseEffect,AbilityEffects).join(AbilityEffects).where(AbilityEffects.id == effect_id):
+        verboses.append(verbose)
+
+    return verboses

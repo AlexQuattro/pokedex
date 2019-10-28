@@ -2,7 +2,7 @@ from flask import request
 from flask_restful import Resource
 
 from pokedex.managers.pokemons import search_pokemons, get_pokemon_by_name, create_pokemon, delete_pokemon, edit_pokemon_stats
-from pokedex.models.pokemon import Type
+from pokedex.managers.types import get_types
 
 class Pokemons(Resource):
     def get(self):
@@ -39,12 +39,3 @@ class Pokemon(Resource):
         edit_pokemon_stats(pokemon_name, data['stats'])
         return pokemon.get_small_data()
 
-
-class Types(Resource):
-
-     def get(self):
-         types = []
-         for type in Type.select():
-             types.append(type.name)
-
-         return types
