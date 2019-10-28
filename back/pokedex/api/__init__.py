@@ -16,9 +16,6 @@ def register_api(app):
     @api_bp.before_request
     def before_request():
         db.connect(reuse_if_open=True)
-        log = {'method': request.method, 'url': request.url, 'ip': request.environ['REMOTE_ADDR']}
-        print(log)
-
 
     @api_bp.teardown_request
     def after_request(exception=None):
