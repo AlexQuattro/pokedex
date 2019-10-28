@@ -72,3 +72,37 @@ def new_specie(name):
 
     return new_sp
 
+
+
+def get_species():
+    species = PokemonSpecies.select()
+    return species
+
+
+def get_specie(specie_id):
+    specie = PokemonSpecies.get_or_none(id=specie_id)
+    return specie
+
+
+def get_pokemons_of_species(species):
+    pokemons = PokemonSpeciesVariety.select(PokemonSpeciesVariety, Pokemon).join(Pokemon).where(
+        PokemonSpeciesVariety.pokemon_species << species)
+
+    pokemons_by_specie = {}
+    for pokemon in pokemons:
+        if pokemon.pokemon_species.id not in pokemons_by_specie.keys():
+            pokemons_by_specie[pokemon.pokemon_species.id] = []
+        pokemons_by_specie[pokemon.pokemon_species.id].append(pokemon.pokemon)
+
+    return pokemons_by_specie
+
+
+def add_variety(specie_id, pokemon_id, is_default=False):
+    variety = PokemonSpeciesVariety.get_or_none(pokemon_species=specie_id, pokemon=pokemon_id)
+    if variety is None:
+        variety = PokemonSpeciesVariety.create(pokemon_species=specie_id, is_default=is_default, pokemon=pokemon_id)
+    else:
+        variety.is_default = is_default
+        variety.save()
+
+    return variety

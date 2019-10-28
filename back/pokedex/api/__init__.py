@@ -29,5 +29,7 @@ def register_api(app):
     api.add_resource(Species, '/species')
     api.add_resource(Specie, '/specie')
     api.add_resource(Abilities, '/abilities')
+    api.add_resource(Species, '/species')
+    api.add_resource(Specie, '/specie/<specie_id>')
 
     app.register_blueprint(api_bp, url_prefix="/api/v1")
