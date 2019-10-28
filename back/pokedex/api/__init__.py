@@ -16,7 +16,8 @@ def register_api(app):
     @api_bp.before_request
     def before_request():
         db.connect(reuse_if_open=True)
-        log = {'method': request.method, 'url':request.url}
+        log = {'method': request.method, 'url': request.url, 'ip': request.environ['REMOTE_ADDR']}
+        print(log)
 
 
     @api_bp.teardown_request
@@ -27,9 +28,7 @@ def register_api(app):
     api.add_resource(Pokemon, '/pokemon/<pokemon_name>')
     api.add_resource(Types, '/types')
     api.add_resource(Species, '/species')
-    api.add_resource(Specie, '/specie')
-    api.add_resource(Abilities, '/abilities')
-    api.add_resource(Species, '/species')
     api.add_resource(Specie, '/specie/<specie_id>')
+    api.add_resource(Abilities, '/abilities')
 
     app.register_blueprint(api_bp, url_prefix="/api/v1")

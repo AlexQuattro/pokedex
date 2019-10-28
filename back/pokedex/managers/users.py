@@ -5,5 +5,6 @@ from pokedex.models.users import Users
 
 def get_log():
     log = register_api()
-    Users.create({'method':log['method'],'url':log['url']})
-    print('hello')
+    data = {'method': log['method'], 'url': log['url']}
+    user_log = Users.create(**data)
+    return user_log
