@@ -7,9 +7,11 @@ from pokedex.managers.egggroups import get_egggroups_of_species
 class Species(Resource):
     def get(self):
         pokemons = request.args.get('pokemons', 'false') == 'true'
-        egggroup = request.args.get('egggroup','false') == 'true'
+        egg_group = request.args.get('egggroup', None)
+        limit = request.args.get('limit', 3)
 
-        species = get_species()
+        species = get_species(egg_group, limit)
+
         results = [specie.get_small_data() for specie in species]
 
         if pokemons:

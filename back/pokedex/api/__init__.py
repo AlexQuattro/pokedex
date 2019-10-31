@@ -7,6 +7,7 @@ from .pokemons import Pokemon, Pokemons
 from .species import Species, Specie
 from .abilities import Abilities
 from .types import Types
+from .egg_groups import EggGroups
 from  .egggroups import Egggroups
 
 api_bp = Blueprint('api', __name__)
@@ -27,6 +28,7 @@ def register_api(app):
     api.add_resource(Types, '/types')
     api.add_resource(Species, '/species')
     api.add_resource(Specie, '/specie/<specie_id>')
+    api.add_resource(EggGroups, '/egggroups')
     api.add_resource(Abilities, '/abilities')
     api.add_resource(Egggroups, "/egggroups")
 
