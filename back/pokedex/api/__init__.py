@@ -1,4 +1,4 @@
-from flask import Blueprint, request
+from flask import Blueprint
 from flask_restful import Api
 
 from pokedex.models.database import db
@@ -7,6 +7,7 @@ from .pokemons import Pokemon, Pokemons
 from .species import Species, Specie
 from .abilities import Abilities
 from .types import Types
+from  .egggroups import Egggroups
 
 api_bp = Blueprint('api', __name__)
 api = Api(api_bp)
@@ -27,5 +28,6 @@ def register_api(app):
     api.add_resource(Species, '/species')
     api.add_resource(Specie, '/specie/<specie_id>')
     api.add_resource(Abilities, '/abilities')
+    api.add_resource(Egggroups, "/egggroups")
 
     app.register_blueprint(api_bp, url_prefix="/api/v1")

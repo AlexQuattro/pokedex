@@ -44,6 +44,7 @@ def load_pokemon_from_api(name):
 
     return pokemon
 
+
 def load_pokemon_types_from_api(name):
     request = requests.get(f'https://pokeapi.co/api/v2/pokemon/{name}')
     pokemon_data = request.json()
@@ -109,7 +110,6 @@ def search_pokemons(query, type):
     query = query.lower()
     pokemons = Pokemon.select().where(Pokemon.name.contains(query)).limit(20)
 
-
     if type is not None:
         filtered_pokemons = []
         for pokemon in pokemons:
@@ -142,11 +142,11 @@ def delete_pokemon(name):
     return True
 
 
-def get_types(name,types):
+def get_types(name, types):
     pokemon = get_pokemon_by_name(name)
     PokemonTypes.delete().where(pokemon.name == name).execute()
 
-    for i,type in enumerate(types):
+    for i, type in enumerate(types):
         query = Type.get_or_none(name=type)
-        PokemonTypes.create(pokemon=pokemon,type = query,slot = i)
+        PokemonTypes.create(pokemon=pokemon, type=query, slot=i)
     return True

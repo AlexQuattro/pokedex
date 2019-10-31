@@ -23,7 +23,8 @@ def load_ability_from_api(name):
             language = Language.get_or_none(name=effect['language']['name'])
             if language is None:
                 language = Language.create(name=effect['language']['name'])
-            verbose_effect = VerboseEffect.create(effect=effect['effect'], short_effect=effect['short_effect'], language=language)
+            verbose_effect = VerboseEffect.create(effect=effect['effect'], short_effect=effect['short_effect'],
+                                                  language=language)
         ability_effect = AbilityEffects.create(ability=ability, effect=verbose_effect)
 
     return ability
@@ -47,16 +48,19 @@ def load_abilities_from_api():
 
     return i
 
+
 def get_ability():
     abilities = []
     for ability in Ability.select():
-            abilities.append(ability)
+        abilities.append(ability)
 
     return abilities
 
+
 def get_verbose(effect_id):
     verboses = []
-    for verbose in VerboseEffect.select(VerboseEffect,AbilityEffects).join(AbilityEffects).where(AbilityEffects.id == effect_id):
+    for verbose in VerboseEffect.select(VerboseEffect, AbilityEffects).join(AbilityEffects).where(
+            AbilityEffects.id == effect_id):
         verboses.append(verbose)
 
     return verboses
