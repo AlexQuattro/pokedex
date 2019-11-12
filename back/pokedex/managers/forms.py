@@ -40,3 +40,8 @@ def load_pokemon_forms_from_api():
         print(f'{i} forms loaded.')
 
     return i
+
+
+def get_forms_from_pokemon(pokemon):
+    forms = PokemonForm.select().where(PokemonForm.pokemon == pokemon)
+    return forms

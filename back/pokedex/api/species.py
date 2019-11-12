@@ -2,7 +2,6 @@ from flask import request
 from flask_restful import Resource
 
 from pokedex.managers.species import get_species, get_pokemons_of_species, get_specie, add_variety
-from pokedex.managers.egggroups import get_egggroups_of_species
 
 class Species(Resource):
     def get(self):
@@ -18,12 +17,6 @@ class Species(Resource):
             pokemons_by_species = get_pokemons_of_species(species)
             for specie in results:
                 specie['pokemons'] = [p.name for p in pokemons_by_species[specie['id']]]
-
-        if egggroup:
-            egggroups_by_species = get_egggroups_of_species(species)
-            for specie in results:
-                specie['egggroups'] = [p.name for p in egggroups_by_species[specie['id']]]
-
 
         return results
 

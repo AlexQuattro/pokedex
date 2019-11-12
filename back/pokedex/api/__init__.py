@@ -8,7 +8,10 @@ from .species import Species, Specie
 from .abilities import Abilities
 from .types import Types
 from .egg_groups import EggGroups
-from  .egggroups import Egggroups
+from .users import Users
+from .stats import Stats
+from .collections import Collections
+from .generations import Generations, Generation
 
 api_bp = Blueprint('api', __name__)
 api = Api(api_bp)
@@ -30,6 +33,10 @@ def register_api(app):
     api.add_resource(Specie, '/specie/<specie_id>')
     api.add_resource(EggGroups, '/egggroups')
     api.add_resource(Abilities, '/abilities')
-    api.add_resource(Egggroups, "/egggroups")
+    api.add_resource(Users, "/users")
+    api.add_resource(Stats, "/stats")
+    api.add_resource(Collections, '/collections')
+    api.add_resource(Generations, '/generations')
+    api.add_resource(Generation, '/generation/<generation_name>')
 
     app.register_blueprint(api_bp, url_prefix="/api/v1")

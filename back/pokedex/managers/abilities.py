@@ -1,6 +1,6 @@
 import requests
 
-from pokedex.models.pokemon import Ability, Generation, AbilityEffects, VerboseEffect, Language
+from pokedex.models.pokemon import Ability, Generation, AbilityEffects, VerboseEffect, Language, PokemonAbilities
 
 
 def load_ability_from_api(name):
@@ -49,9 +49,9 @@ def load_abilities_from_api():
     return i
 
 
-def get_ability():
+def get_ability(offset=0):
     abilities = []
-    for ability in Ability.select():
+    for ability in Ability.select().offset(offset):
         abilities.append(ability)
 
     return abilities
@@ -64,3 +64,13 @@ def get_verbose(effect_id):
         verboses.append(verbose)
 
     return verboses
+
+
+def get_abilities_from_pokemon(pokemon):
+    abilities = PokemonAbilities.select().where(PokemonAbilities.pokemon == pokemon)
+    return abilities
+
+
+def get_generation_of_this_ability(ability_id):
+    generation_of_this_ability = Generation.select(Generation, Ability).join(Ability).where(Ability.id == ability_id)
+    return generation_of_this_ability
