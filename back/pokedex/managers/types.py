@@ -13,7 +13,9 @@ def get_types(search=None, unused=False):
             types.append(type)
 
     if unused:
-        types = [type for type in types if len(type.pokemons) == 0]
+        types = [type for type in types if len(type.pokemon_types) == 0]
+
+    types = types[0:10]
     return types
 
 
