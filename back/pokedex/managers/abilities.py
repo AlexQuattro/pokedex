@@ -46,3 +46,15 @@ def load_abilities_from_api():
         print(f'{i} abilities loaded.')
 
     return i
+
+def get_abilities():
+    abilities = Ability.select()
+    return abilities
+
+def get_ability_generation_name(filter):
+    ability_generation_name = Generation.select().join(Ability).join(AbilityEffects).join(VerboseEffect).where(Generation.name == filter)
+    result = []
+    for ability in ability_generation_name:
+        result.append(ability.get_small_data())
+        result_ab = result [0:10]
+        return result_ab

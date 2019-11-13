@@ -2,14 +2,21 @@ from flask import request
 from flask_restful import Resource
 
 from pokedex.managers.analytics import add_pokemon_search_history
-from pokedex.managers.pokemons import search_pokemons, get_pokemon_by_name, create_pokemon, delete_pokemon
+from pokedex.managers.pokemons import search_pokemons, get_pokemon_by_name, create_pokemon, delete_pokemon, edit_pokemon_stats
 
 
 class Pokemons(Resource):
     def get(self):
         query = request.args['query']
-        pokemons_matching = search_pokemons(query, type=None)
+        type = request.args.get('type')
+        ability = request.args.get('ability')
+        limit = request.args.get('limit')
+
+
+        pokemons_matching = search_pokemons(query, type, ability, limit)
         pokemons = [pokemon.get_small_data() for pokemon in pokemons_matching]
+
+
 
         add_pokemon_search_history(request.remote_addr, query)
 
@@ -29,8 +36,9 @@ class Pokemon(Resource):
 
         return pokemon.get_small_data()
 
-    def patch(self, pokemon_name):
-        return 'panic', 500
+    def patch(self, pokemon_name, stat, value):
+        new_stat = edit_pokemon_stats(name=pokemon_name, stat= stat, new_value = value)
+        return new_stat
 
     def delete(self, pokemon_name):
         result = delete_pokemon(pokemon_name)

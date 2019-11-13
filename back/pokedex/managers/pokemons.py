@@ -1,7 +1,7 @@
 import requests
 from playhouse.shortcuts import update_model_from_dict
 
-from pokedex.models.pokemon import Pokemon, Ability, PokemonAbilities, Type, PokemonTypes
+from pokedex.models.pokemon import Pokemon, Ability, PokemonAbilities, Type, PokemonTypes, PokemonForm
 
 
 def get_pokemon_by_name(name):
@@ -106,9 +106,9 @@ def load_all_pokemons_from_api():
     return i
 
 
-def search_pokemons(query, type):
+def search_pokemons(query,  type=None, ability=None, limit= None):
     query = query.lower()
-    pokemons = Pokemon.select().where(Pokemon.name.contains(query)).limit(20)
+    pokemons = Pokemon.select().where(Pokemon.name.contains(query))
 
     if type is not None:
         filtered_pokemons = []
@@ -122,7 +122,23 @@ def search_pokemons(query, type):
 
             if type in types:
                 filtered_pokemons.append(pokemon)
+
         return filtered_pokemons
+
+    if ability is not None:
+        filtered_pokemons = []
+        for pokemon in pokemons:
+            # types = [t.type.name for t in pokemon.types]
+            abilities = []
+            pokemonabilities_de_ce_pokemon = PokemonAbilities.select().where(PokemonAbilities.pokemon == pokemon)
+            for pokemonability in pokemonabilities_de_ce_pokemon:
+                ability_name = pokemonability.ability.name
+                abilities.append(ability_name)
+
+            if ability in abilities:
+                filtered_pokemons.append(pokemon)
+        return filtered_pokemons
+
 
     return pokemons
 
@@ -133,7 +149,7 @@ def edit_pokemon_stats(name, stat, new_value):
     update = {stat: new_value}
     pokemon.update(**update).execute()
 
-    return pokemon
+    return pokemon.get_small_data()
 
 
 def delete_pokemon(name):

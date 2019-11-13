@@ -66,6 +66,18 @@ def get_specie(specie_id):
     specie = PokemonSpecies.get_or_none(id=specie_id)
     return specie
 
+def get_species_by_egggroupes(egggroupes):
+    species = PokemonSpeciesEggGroups.select(PokemonSpeciesEggGroups,EggGroup).join(EggGroup).where(PokemonSpeciesEggGroups.egg_group << egggroupes)
+
+    pokemons_by_specie = {}
+    for specie in species:
+        if specie.pokemon_species.id not in pokemons_by_specie.keys():
+            pokemons_by_specie[specie.pokemon_species.id] = []
+            pokemons_by_specie[specie.pokemon_species.id].append(specie.egg_group)
+
+    return pokemons_by_specie
+
+
 
 def get_pokemons_of_species(species):
     pokemons = PokemonSpeciesVariety.select(PokemonSpeciesVariety, Pokemon).join(Pokemon).where(

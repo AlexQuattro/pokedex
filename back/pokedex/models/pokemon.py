@@ -86,6 +86,12 @@ class PokemonTypes(CommonModel):
     type = ForeignKeyField(Type, backref='pokemon_types')
     slot = IntegerField()
 
+class Form (CommonModel):
+    id = PrimaryKeyField()
+    name = CharField()
+
+    def get_small_data(self):
+        return {'id': self.id, 'name': self.name}
 
 class PokemonForm(CommonModel):
     id = PrimaryKeyField()

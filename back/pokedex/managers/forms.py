@@ -40,3 +40,4 @@ def load_pokemon_forms_from_api():
         print(f'{i} forms loaded.')
 
     return i
+

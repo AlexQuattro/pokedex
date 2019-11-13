@@ -7,6 +7,8 @@ from .pokemons import Pokemon, Pokemons
 from .species import Species, Specie
 from .types import Types
 from .egg_groups import EggGroups
+from .abilities import Abilities, Ability
+from .generations import Generations
 
 api_bp = Blueprint('api', __name__)
 api = Api(api_bp)
@@ -22,10 +24,14 @@ def register_api(app):
         db.close()
 
     api.add_resource(Pokemons, '/pokemons')
-    api.add_resource(Pokemon, '/pokemon/<pokemon_name>')
+    api.add_resource(Pokemon, '/pokemon/<pokemon_name>/<stat>/<value>')
     api.add_resource(Types, '/types')
     api.add_resource(Species, '/species')
     api.add_resource(Specie, '/specie/<specie_id>')
     api.add_resource(EggGroups, '/egggroups')
+    api.add_resource(Abilities, '/abilities')
+    api.add_resource(Ability, '/ability/<ability_generation_name>')
+    api.add_resource(Generations, '/generations')
+    api.add_resource(Generation, '/generation/<generation_name>')
 
     app.register_blueprint(api_bp, url_prefix="/api/v1")

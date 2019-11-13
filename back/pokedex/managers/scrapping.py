@@ -46,3 +46,16 @@ def load_pokemons_from_wikipedia():
         pokemon_name = pokemons[pokemon_id]
 
         Pokemon.create(id=pokemon_id, name=pokemon_name)
+
+import requests
+from lxml import etree
+
+
+from bs4 import BeautifulSoup
+
+def load_pokemons_from_wikipedia():
+    wikipedia_request = requests.get('https://en.wikipedia.org/wiki/List_of_Pok%C3%A9mon')
+    wikipedia_html = wikipedia_request.text
+
+    xpath = '/ html / body / div[3] / div[3] / div[4] / div / table[3] '
+

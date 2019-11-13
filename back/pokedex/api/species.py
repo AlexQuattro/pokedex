@@ -1,7 +1,7 @@
 from flask import request
 from flask_restful import Resource
 
-from pokedex.managers.species import get_species, get_pokemons_of_species, get_specie, add_variety
+from pokedex.managers.species import get_species, get_pokemons_of_species, get_specie, add_variety, get_species_by_egggroupes
 
 
 class Species(Resource):
@@ -9,6 +9,7 @@ class Species(Resource):
         pokemons = request.args.get('pokemons', 'false') == 'true'
         egg_group = request.args.get('egggroup', None)
         limit = request.args.get('limit', 3)
+        species_by_egg = request.args.get('species_by_egg', 'false') == 'true'
 
         species = get_species(egg_group, limit)
 
@@ -18,7 +19,13 @@ class Species(Resource):
             for specie in results:
                 specie['pokemons'] = [p.name for p in pokemons_by_species[specie['id']]]
 
+        if species_by_egg:
+            species_b_g = get_species_by_egggroupes(species)
+            for specie in results:
+                specie['species_by_egg'] = [p.name for p in species_b_g[specie['id']]]
+
         return results
+
 
     def put(self):
         data = request.json
