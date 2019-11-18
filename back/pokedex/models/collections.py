@@ -39,6 +39,12 @@ class Collection(CommonModel):
     pokemon = ForeignKeyField(PokemonCollection)
 
 
+class Match(CommonModel):
+    id = PrimaryKeyField()
+    user_id = ForeignKeyField(User)
+    fight_result = CharField()
+
+
 with db:
     User.create_table(fail_silently=True)
     PokemonCollection.create_table(fail_silently=True)

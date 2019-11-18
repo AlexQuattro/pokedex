@@ -12,6 +12,7 @@ from .users import Users
 from .stats import Stats
 from .collections import Collections
 from .generations import Generations, Generation
+from .scrapping import Scrapping
 
 api_bp = Blueprint('api', __name__)
 api = Api(api_bp)
@@ -38,5 +39,6 @@ def register_api(app):
     api.add_resource(Collections, '/collections')
     api.add_resource(Generations, '/generations')
     api.add_resource(Generation, '/generation/<generation_name>')
+    api.add_resource(Scrapping, "/scrapping")
 
     app.register_blueprint(api_bp, url_prefix="/api/v1")

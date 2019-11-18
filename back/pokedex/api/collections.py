@@ -2,7 +2,7 @@ from flask import request
 from flask_restful import Resource
 
 from pokedex.managers.collections import create_user_or_collection, delete_user, get_user, get_collection, \
-    get_pokemon, modify_pokemon, get_pokemons_by_collection, delete_collection, delete_pokemon
+    get_pokemon, modify_pokemon, get_pokemons_by_collection, delete_collection, delete_pokemon, fight
 
 
 class Collections(Resource):
@@ -29,7 +29,7 @@ class Collections(Resource):
     def post(self):
         user = request.args.get('user')
         collection = request.args.get('collection')
-        pokemon = request.args.get('pokemon')
+        pokemon = request.args.get('pokemon', None)
 
         collection_create = create_user_or_collection(collection_name=collection, pokemon_name=pokemon, name=user)
 
@@ -59,3 +59,14 @@ class Collections(Resource):
                 if pokemon is not None:
                     delete = delete_pokemon(pokemon)
             return delete
+
+
+    def put(self):
+        user_1 = request.args['user_1']
+        user_2 = request.args['user_2']
+        collection_user_1 = request.args['collection_user_1']
+        collection_user_2 = request.args['collection_user_2']
+
+        result = fight(user_1=user_1,collection_user_1=collection_user_1,user_2=user_2,collection_user_2=collection_user_2)
+
+        return result
