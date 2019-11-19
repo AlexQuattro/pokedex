@@ -1,12 +1,15 @@
 import requests
-from lxml import html
+from lxml import html, etree
 from tqdm import tqdm
+import math
+
+from bs4 import BeautifulSoup
 
 from pokedex.models.scrapping import Pokemon
 
 
 def load_pokemons_from_wikipedia():
-    wikipedia_request = requests.get('https://en.wikipedia.org/wiki/List_of_Pok%C3%A9mon')
+    wikipedia_request = requests.get('https://en.wikipedia.org/wiki/List_of_Pok%C3%A9mon ')
     xpath = '/ html / body / div[3] / div[3] / div[4] / div / table[3]'
 
     tree = html.fromstring(wikipedia_request.content)
@@ -14,6 +17,14 @@ def load_pokemons_from_wikipedia():
 
     pokemons_table = pokemons_tables[0]
     pokemons_table_rows = pokemons_table.findall('.//tr')
+
+    header =[]
+    first_row = pokemons_table_rows[0]
+
+    for cell in first_row.findall('th'):
+        content = cell.text_content()
+        header.append(content)
+
 
     pokemons = {}
 
@@ -27,6 +38,7 @@ def load_pokemons_from_wikipedia():
                 if 'No additional' not in content:
                     pokemon_id = int(content)
                     pokemons[pokemon_id] = None
+                    value = header[math.floor(i/2)]
                 else:
                     i += 1
             else:
@@ -44,18 +56,7 @@ def load_pokemons_from_wikipedia():
     Pokemon.delete().execute()
     for pokemon_id in tqdm(pokemons.keys()):
         pokemon_name = pokemons[pokemon_id]
-
-        Pokemon.create(id=pokemon_id, name=pokemon_name)
-
-import requests
-from lxml import etree
+        pokemon_generation = value
 
 
-from bs4 import BeautifulSoup
-
-def load_pokemons_from_wikipedia():
-    wikipedia_request = requests.get('https://en.wikipedia.org/wiki/List_of_Pok%C3%A9mon')
-    wikipedia_html = wikipedia_request.text
-
-    xpath = '/ html / body / div[3] / div[3] / div[4] / div / table[3] '
-
+        Pokemon.create(id=pokemon_id, name=pokemon_name, generation = pokemon_generation )

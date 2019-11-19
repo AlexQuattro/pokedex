@@ -10,3 +10,7 @@ def get_generations():
 
 def get_pokemons_from_generations(filter):
     pass
+
+
+def get_generation(filter):
+    pass

@@ -18,6 +18,9 @@ def get_types(search=None, unused=False):
     types = types[0:10]
     return types
 
+def get_type_name(name):
+    type = Type.get_or_none(name=name)
+    return type
 
 def add_type(name, generation_name):
     generation = Generation.get_or_none(Generation.name == generation_name)
