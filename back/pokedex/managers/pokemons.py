@@ -2,10 +2,14 @@ import requests
 from playhouse.shortcuts import update_model_from_dict
 
 from pokedex.models.pokemon import Pokemon, Ability, PokemonAbilities, Type, PokemonTypes
+from pokedex.errors.not_found import PokemonNotFoundError
 
 
 def get_pokemon_by_name(name):
     pokemon = Pokemon.get_or_none(name=name)
+
+    if pokemon is None:
+        raise PokemonNotFoundError(name)
     return pokemon
 
 
