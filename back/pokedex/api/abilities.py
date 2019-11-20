@@ -3,6 +3,7 @@ from flask_restful import Resource
 
 from pokedex.managers.abilities import get_ability, get_verbose, get_generation_of_this_ability
 
+
 class Abilities(Resource):
 
     def get(self):

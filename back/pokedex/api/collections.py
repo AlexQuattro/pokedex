@@ -1,40 +1,54 @@
 from flask import request
 from flask_restful import Resource
 
-from pokedex.managers.collections import create_user_or_collection, delete_user, get_user, get_collection, \
-    get_pokemon, modify_pokemon, get_pokemons_by_collection, delete_collection, delete_pokemon, fight
+from pokedex.managers.collections import create_collection, delete_user, get_user, get_collection, \
+    get_pokemon, modify_pokemon, get_pokemons_by_collection, delete_collection, delete_pokemon, create_user, \
+    add_pokemon, get_information_by_pokemon
 
 
 class Collections(Resource):
     def get(self):
         user = request.args.get('user')
         collection = request.args.get('collection')
-        pokemon = request.args.get('pokemon')
+        pokemon = request.args.get('pokemon','false') == 'true'
 
         user_query = get_user(user)
         collection_query = get_collection(collection)
-        pokemon_query = get_pokemon(pokemon)
 
+        result = []
         if user_query is not None:
-            return user_query
-        if collection_query is not None:
-            pokemons_by_collection = get_pokemons_by_collection(collection)
-            collection_query['pokemon'] = [pokemon.name for pokemon in pokemons_by_collection]
-            return collection_query
-        if pokemon_query is not None:
-            return pokemon_query
-        else:
-            return False
+            user = {'user': user_query.name}
+            result.append(user)
+
+            if collection_query is not None:
+                collection_query = {'collection_name': collection_query['collection_name']}
+                user['collection'] = []
+                pokemons_by_collection = get_pokemons_by_collection(collection)
+                collection_query['pokemon'] = [pokemon.name for pokemon in pokemons_by_collection]
+                user['collection'].append(collection_query)
+
+                if pokemon:
+                    for pokemon in collection_query['pokemon']:
+                        information_of_this_pokemon = get_information_by_pokemon(pokemon)
+                        for information in information_of_this_pokemon:
+                            pokemon_information = information.get_small_data()
+                            collection_query['pokemon'].append(pokemon_information)
+
+        return result
 
     def post(self):
         user = request.args.get('user')
         collection = request.args.get('collection')
-        pokemon = request.args.get('pokemon', None)
+        pokemon = request.args.get('pokemon')
 
-        collection_create = create_user_or_collection(collection_name=collection, pokemon_name=pokemon, name=user)
-
-        if collection_create is not None:
-            return collection_create
+        result = []
+        if user is not None:
+            result.append(create_user(name=user))
+            if collection is not None:
+                result.append(create_collection(collection_name=collection, name=user))
+            if pokemon is not None:
+                result.append(add_pokemon(collection=collection, pokemon_name=pokemon))
+        return result
 
     def patch(self):
         pokemon_name = request.args['pokemon']
@@ -59,14 +73,3 @@ class Collections(Resource):
                 if pokemon is not None:
                     delete = delete_pokemon(pokemon)
             return delete
-
-
-    def put(self):
-        user_1 = request.args['user_1']
-        user_2 = request.args['user_2']
-        collection_user_1 = request.args['collection_user_1']
-        collection_user_2 = request.args['collection_user_2']
-
-        result = fight(user_1=user_1,collection_user_1=collection_user_1,user_2=user_2,collection_user_2=collection_user_2)
-
-        return result

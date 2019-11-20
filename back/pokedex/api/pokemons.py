@@ -1,6 +1,7 @@
 from flask import request
 from flask_restful import Resource
 
+from pokedex.errors.not_found import PokemonNotFoundError
 from pokedex.managers.analytics import add_pokemon_search_history
 from pokedex.managers.pokemons import search_pokemons, get_pokemon_by_name, create_pokemon, delete_pokemon, modify_stat
 from pokedex.managers.users import add_user_agent
@@ -55,7 +56,7 @@ class Pokemon(Resource):
         form = request.args.get('form', 'false') == 'true'
 
         if pokemon is None:
-            return {'msg': 'Not found'}, 404
+            raise PokemonNotFoundError(pokemon_name)
 
         pokemon = pokemon.get_small_data()
 
@@ -82,6 +83,3 @@ class Pokemon(Resource):
     def delete(self, pokemon_name):
         result = delete_pokemon(pokemon_name)
         return result
-
-
-

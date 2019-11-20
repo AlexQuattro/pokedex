@@ -3,6 +3,7 @@ from typing import List
 import requests
 
 from pokedex.models.pokemon import PokemonSpecies, EggGroup, PokemonSpeciesEggGroups, PokemonSpeciesVariety, Pokemon
+from pokedex.errors.not_found import SpecieNotFoundError
 
 
 def load_pokemon_species_from_api(name):
@@ -64,6 +65,10 @@ def get_species(egg_group=None, limit=None):
 
 def get_specie(specie_id):
     specie = PokemonSpecies.get_or_none(id=specie_id)
+
+    if specie is None:
+        raise SpecieNotFoundError(specie_id)
+
     return specie
 
 

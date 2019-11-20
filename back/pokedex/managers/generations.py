@@ -1,5 +1,6 @@
 from pokedex.models.pokemon import Generation, Ability, Type
 from peewee import fn
+from pokedex.errors.not_found import GenerationNotFoundError
 
 
 def get_generations(query=None):
@@ -10,9 +11,9 @@ def get_generations(query=None):
     return generations
 
 
-def get_number_of_abilities_by_generation():
+def get_number_of_abilities_by_generation(generation_id):
     query = Generation.select(Generation.name, fn.Count(Generation.name).alias('count')).join(Ability).group_by(
-        Generation.name)
+        Generation.name).where(Generation.id == generation_id)
     result = [{'generation': i.name, 'count': i.count} for i in query]
 
     return result
@@ -21,9 +22,9 @@ def get_number_of_abilities_by_generation():
 def get_number_of_types_by_generation():
     query = Generation.select(Generation.name, fn.Count(Generation.name).alias('count')).join(Type).group_by(
         Generation.name)
-    result = [{'generation': i.name, 'count': i.count} for i in query]
+    # result = [{'generation': i.name, 'count': i.count} for i in query]
 
-    return result
+    return query
 
 
 def add_generation(generation_name):
@@ -38,4 +39,6 @@ def add_generation(generation_name):
 
 def get_generation(name):
     generation = Generation.get_or_none(name=name)
+    if generation is None:
+        raise GenerationNotFoundError(name)
     return generation

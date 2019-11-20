@@ -10,7 +10,8 @@ def add_user_agent():
 
 
 def sum_of_requests_of_user_agent():
-    query = UserAgent.select(UserAgent.user_agent, fn.Count(UserAgent.user_agent).alias('count')).group_by(UserAgent.user_agent)
+    query = UserAgent.select(UserAgent.user_agent, fn.Count(UserAgent.user_agent).alias('count')).group_by(
+        UserAgent.user_agent)
     result = [{'user_agent': i.user_agent, 'count': i.count} for i in query]
 
-    return  result
+    return result

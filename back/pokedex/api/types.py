@@ -8,7 +8,7 @@ class Types(Resource):
     def get(self):
         pokemons = request.args.get('pokemons', 'false') == 'true'
         unused = request.args.get('unused', 'false') == 'true'
-        query = request.args.get('query', None)
+        query = request.args.get('query')
 
         types = get_types(search=query, unused=unused)
 

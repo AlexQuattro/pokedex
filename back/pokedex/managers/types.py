@@ -1,14 +1,15 @@
 import requests
 
 from pokedex.models.pokemon import Type, Generation, PokemonTypes, Pokemon
+from pokedex.errors.not_found import TypeNotFoundError
 
 
 def get_types(search=None, unused=False):
-    if search is None:
-        search = ""
+    if search == '':
+        raise TypeNotFoundError(search)
 
     types = []
-    for type in Type.select():
+    for type in Type.select().limit(10):
         if search in type.name:
             types.append(type)
 

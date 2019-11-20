@@ -18,8 +18,15 @@ class User(CommonModel):
     name = CharField()
 
 
+class Collection(CommonModel):
+    id = PrimaryKeyField()
+    collection_name = CharField()
+    user = ForeignKeyField(User)
+
+
 class PokemonCollection(CommonModel):
     id = PrimaryKeyField()
+    collection_id = ForeignKeyField(Collection)
     id_pokemon = CharField()
     name = CharField()
     hp = CharField()
@@ -28,24 +35,9 @@ class PokemonCollection(CommonModel):
     attack = CharField()
     special_defense = CharField()
     speed = CharField()
-    sprite_back = CharField()
-    sprite_front = CharField()
-
-
-class Collection(CommonModel):
-    id = PrimaryKeyField()
-    collection_name = CharField()
-    user = ForeignKeyField(User)
-    pokemon = ForeignKeyField(PokemonCollection)
-
-
-class Match(CommonModel):
-    id = PrimaryKeyField()
-    user_id = ForeignKeyField(User)
-    fight_result = CharField()
 
 
 with db:
     User.create_table(fail_silently=True)
-    PokemonCollection.create_table(fail_silently=True)
     Collection.create_table(fail_silently=True)
+    PokemonCollection.create_table(fail_silently=True)
